@@ -16,7 +16,8 @@ class loginController extends Controller
     public function login(LoginRequest $request)
         {
             $credentials =$request->only(['email','password']);
-            if(!$token = auth()->guard()->attempt($credentials))
+
+            if(!$token = auth()->guard('api')->attempt($credentials))
             {
                 return $this->apiResponse(['message' => 'Unauthorize']);
             }
@@ -32,7 +33,8 @@ class loginController extends Controller
 
         protected function respondWithToken($token)
         {
-            $user = auth()->user();
+
+            $user = auth()->guard('api')->user();
             $data = new loginResource($user);
 
             return $this->apiResponse(['user'=>$data,'token'=>$token]);
